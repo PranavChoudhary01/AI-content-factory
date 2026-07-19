@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: #0a1730;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+input,
+select {
+  outline: none;
+}
