@@ -1,8 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Sparkles } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Sparkles, LogOut, LogIn } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <nav className="border-b border-line bg-panel">
       <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
@@ -24,6 +33,19 @@ export default function Navbar() {
           <Link to="/admin" className="text-mint hover:text-mint/80">
             Stats
           </Link>
+
+          {user ? (
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-text-muted">Hi, {user.name?.split(" ")[0]}</span>
+              <button onClick={handleLogout} className="flex items-center gap-1.5 text-text-secondary hover:text-text-primary">
+                <LogOut size={14} /> Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="flex items-center gap-1.5 text-amber hover:text-amber/80">
+              <LogIn size={14} /> Login
+            </Link>
+          )}
         </div>
       </div>
     </nav>
