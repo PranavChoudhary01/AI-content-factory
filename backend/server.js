@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
+const authRoutes = require("./routes/authRoutes");
 const contentRoutes = require("./routes/contentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 
@@ -13,6 +14,7 @@ app.use(express.json({ limit: "2mb" }));
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
+app.use("/api/auth", authRoutes);
 app.use("/api/content", contentRoutes);
 app.use("/api/admin", adminRoutes);
 
