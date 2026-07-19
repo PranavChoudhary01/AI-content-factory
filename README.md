@@ -1,14 +1,13 @@
 # LearnKins — AI Content Factory
 
-Full-stack MERN app that generates NCERT-aligned study material (notes, worksheets, flashcards, MCQs, mind maps, PPT outlines) using the Claude API.
+Full-stack MERN app that generates NCERT-aligned study material (notes, worksheets, flashcards, MCQs, mind maps, PPT outlines) using the Groq API.
 
 ## Stack
 
 - **Frontend:** React (Vite) + Tailwind CSS + React Router
 - **Backend:** Node.js + Express + MongoDB (Mongoose)
-- **AI:** Groq API (free, OpenAI-compatible, no billing needed) — Llama 3.3 70B for content generation
-
-No authentication — this is a single shared workspace, open for anyone using the app.
+- **Auth:** JWT + bcrypt password hashing — signup/login save user data to MongoDB. This is **login for account creation only**, not access control: every page (dashboard, content factory, history, stats) is open whether or not you're logged in.
+- **AI:** Groq API (free, OpenAI-compatible) — Llama 3.3 70B for content generation
 
 ## Getting a free Groq API key
 
@@ -16,14 +15,12 @@ No authentication — this is a single shared workspace, open for anyone using t
 2. Left sidebar → **API Keys** → **Create API Key**
 3. Copy the key (starts with `gsk_...`) into `backend/.env` as `GROQ_API_KEY`
 
-Groq's free tier has generous rate limits and is plenty for a project like this.
-
 ## Project structure
 
 ```
 learnkins-content-factory/
-  backend/          Express API, MongoDB models, content generation, stats
-  frontend/          React app — dashboard, content factory, history, stats
+  backend/          Express API — auth (signup/login), content generation, history, stats
+  frontend/          React app — login/signup, dashboard, content factory, history, stats
 ```
 
 ## Local setup
@@ -33,7 +30,7 @@ learnkins-content-factory/
 ```
 cd backend
 npm install
-cp .env.example .env   # fill in MONGO_URI, GROQ_API_KEY
+cp .env.example .env   # fill in MONGO_URI, JWT_SECRET, GROQ_API_KEY
 npm run dev
 ```
 
@@ -52,7 +49,7 @@ Runs on `http://localhost:5173`.
 
 ## Deployment
 
-- **Backend → Render:** new Web Service, root directory `backend`, build command `npm install`, start command `npm start`. Add env vars from `.env.example` (MongoDB Atlas connection string for `MONGO_URI`, your Groq key for `GROQ_API_KEY`).
+- **Backend → Render:** new Web Service, root directory `backend`, build command `npm install`, start command `npm start`. Add env vars from `.env.example`.
 - **Frontend → Vercel:** import the repo, root directory `frontend`, framework preset Vite. Set `VITE_API_URL` to the deployed Render backend URL.
 - Update `CLIENT_ORIGIN` in the backend env to the deployed Vercel URL so CORS allows it.
 
@@ -60,6 +57,9 @@ Runs on `http://localhost:5173`.
 
 | Method | Route                     | Description                  |
 |--------|----------------------------|--------------------------------|
+| POST   | /api/auth/signup             | Create account (saved to MongoDB) |
+| POST   | /api/auth/login               | Log in, returns JWT           |
+| GET    | /api/auth/me                   | Current user profile (requires token) |
 | POST   | /api/content/generate        | Generate content, saves it    |
 | GET    | /api/content/history          | Full generation history        |
 | DELETE | /api/content/history/:id      | Delete a history entry        |
@@ -67,6 +67,5 @@ Runs on `http://localhost:5173`.
 
 ## Notes for the internship writeup
 
+- Auth exists to demonstrate signup/login + MongoDB persistence (bcrypt hashing, JWT issuing) — it's intentionally **not** wired up as route protection, so content generation stays open. A natural next step: add a `protect` middleware back onto `/api/content` and `/api/admin` routes if per-user gating is needed later.
 - "Context" retrieval is currently a UI placeholder — real RAG needs an NCERT content corpus chunked and embedded into a vector store (pgvector / Pinecone), retrieved before the generation call in `backend/utils/groq.js`.
-- Content generation prompts are centralized in `backend/utils/groq.js` — that's the file to extend with retrieval context once the corpus pipeline exists.
-- No auth layer — every generated item is visible to everyone using the app. Adding per-user accounts later would mean reintroducing a `User` model and attaching a `user` reference back onto `Content`.
