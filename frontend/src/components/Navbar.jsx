@@ -14,13 +14,13 @@ export default function Navbar() {
 
   return (
     <nav className="border-b border-line bg-panel">
-      <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
-        <Link to="/dashboard" className="flex items-center gap-2">
+      <div className="max-w-6xl mx-auto px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-y-2 gap-x-4">
+        <Link to="/dashboard" className="flex items-center gap-2 shrink-0">
           <Sparkles size={16} className="text-amber" />
           <span className="text-xs tracking-[0.2em] uppercase text-amber">LearnKins</span>
         </Link>
 
-        <div className="flex items-center gap-5 text-sm">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs sm:text-sm">
           <Link to="/dashboard" className="text-text-secondary hover:text-text-primary">
             Dashboard
           </Link>
@@ -35,8 +35,8 @@ export default function Navbar() {
           </Link>
 
           {user ? (
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-text-muted">Hi, {user.name?.split(" ")[0]}</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="hidden sm:inline text-xs text-text-muted">Hi, {user.name?.split(" ")[0]}</span>
               <button onClick={handleLogout} className="flex items-center gap-1.5 text-text-secondary hover:text-text-primary">
                 <LogOut size={14} /> Logout
               </button>

@@ -16,7 +16,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto px-5 py-10">
+    <div className="max-w-4xl mx-auto px-4 sm:px-5 py-8 sm:py-10">
       <h1 className="text-2xl font-semibold text-text-primary font-display mb-1">Dashboard</h1>
       <p className="text-sm text-text-muted mb-8">Quick access to content generation and history.</p>
 

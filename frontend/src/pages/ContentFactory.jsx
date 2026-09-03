@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { BookOpen, FileText, Layers, CheckSquare, GitBranch, Presentation, Loader2, RotateCw } from "lucide-react";
+import { BookOpen, FileText, Layers, CheckSquare, GitBranch, Presentation, Loader2, RotateCw, Download } from "lucide-react";
 import client from "../api/client";
 import ResultRenderer from "../components/ResultRenderer";
+import { exportContentToPdf } from "../utils/exportPdf";
 
 const CONTENT_TYPES = [
   { id: "notes", label: "Notes", icon: BookOpen },
@@ -48,7 +49,7 @@ export default function ContentFactory() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-5 py-8">
+    <div className="max-w-5xl mx-auto px-4 sm:px-5 py-6 sm:py-8">
       <h1 className="text-2xl font-semibold text-text-primary font-display mb-1">AI Content Factory</h1>
       <p className="text-sm text-text-muted mb-8">
         Pick a topic, grade and format — content is generated and saved to your history.
@@ -152,7 +153,19 @@ export default function ContentFactory() {
               <Loader2 size={16} className="animate-spin" /> {STAGES[stage]} chal raha hai...
             </div>
           )}
-          {result && !loading && <ResultRenderer type={type} result={result} />}
+          {result && !loading && (
+            <>
+              <div className="flex justify-end mb-3">
+                <button
+                  onClick={() => exportContentToPdf({ type, topic, grade, result })}
+                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md border border-border text-mint hover:bg-mintDark"
+                >
+                  <Download size={14} /> Export as PDF
+                </button>
+              </div>
+              <ResultRenderer type={type} result={result} />
+            </>
+          )}
         </div>
       </div>
     </div>

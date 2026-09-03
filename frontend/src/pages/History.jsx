@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { Trash2, ChevronDown, ChevronUp, Download } from "lucide-react";
 import client from "../api/client";
 import ResultRenderer from "../components/ResultRenderer";
+import { exportContentToPdf } from "../utils/exportPdf";
 
 export default function History() {
   const [items, setItems] = useState([]);
@@ -24,7 +25,7 @@ export default function History() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-5 py-10">
+    <div className="max-w-4xl mx-auto px-4 sm:px-5 py-10">
       <h1 className="text-2xl font-semibold text-text-primary font-display mb-1">History</h1>
       <p className="text-sm text-text-muted mb-8">Everything you've generated, saved automatically.</p>
 
@@ -57,6 +58,16 @@ export default function History() {
               </div>
               {isOpen && (
                 <div className="border-t border-line p-4">
+                  <div className="flex justify-end mb-3">
+                    <button
+                      onClick={() =>
+                        exportContentToPdf({ type: item.type, topic: item.topic, grade: item.grade, result: item.result })
+                      }
+                      className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md border border-border text-mint hover:bg-mintDark"
+                    >
+                      <Download size={14} /> Export as PDF
+                    </button>
+                  </div>
                   <ResultRenderer type={item.type} result={item.result} />
                 </div>
               )}

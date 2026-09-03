@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const contentSchema = new mongoose.Schema(
   {
+    deviceId: { type: String, required: true, index: true },
     topic: { type: String, required: true },
     grade: { type: String, required: true },
     type: {
